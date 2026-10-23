@@ -1,0 +1,13 @@
+{
+  "name": "farid-bettioui-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static rebuild of faridbettioui.framer.website without the Framer badge",
+  "scripts": {
+    "start": "node server.js",
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.48.2"
+  }
+}

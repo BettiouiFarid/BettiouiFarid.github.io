@@ -1,0 +1,24 @@
+# Farid Bettioui — Portfolio
+
+Self-hosted copy of https://faridbettioui.framer.website/ with the "Made in Framer" badge removed.
+
+- `site/` — the website (all pages, images, fonts and scripts are local; nothing loads from framerusercontent.com)
+- `server.js` — tiny dependency-free static server
+- `tests/` — Playwright tests (every page loads, no badge, no broken assets, no JS errors, desktop + mobile)
+
+## Run
+
+```bash
+npm start          # http://localhost:3000
+npm test           # Playwright
+```
+
+Node was installed to `~/.local/node-v22.11.0-darwin-arm64/bin`. Add it to your PATH if `npm` isn't found:
+
+```bash
+echo 'export PATH="$HOME/.local/node-v22.11.0-darwin-arm64/bin:$PATH"' >> ~/.zshrc
+```
+
+## Deploy
+
+Upload the `site/` folder to any static host (Netlify, Vercel, Cloudflare Pages, GitHub Pages). Pages use clean URLs (`/projects` → `projects/index.html`), which those hosts handle automatically.
