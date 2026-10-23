@@ -2,6 +2,8 @@
 
 Self-hosted copy of https://faridbettioui.framer.website/ with the "Made in Framer" badge removed.
 
+**Live:** https://bettiouifarid.github.io/ (GitHub Pages, deployed from `site/` on every push to `main`)
+
 - `site/` — the website (all pages, images, fonts and scripts are local; nothing loads from framerusercontent.com)
 - `server.js` — tiny dependency-free static server
 - `tests/` — Playwright tests (every page loads, no badge, no broken assets, no JS errors, desktop + mobile)
@@ -11,6 +13,7 @@ Self-hosted copy of https://faridbettioui.framer.website/ with the "Made in Fram
 ```bash
 npm start          # http://localhost:3000
 npm test           # Playwright
+BASE_URL=https://bettiouifarid.github.io npm test   # test the live site
 ```
 
 Node was installed to `~/.local/node-v22.11.0-darwin-arm64/bin`. Add it to your PATH if `npm` isn't found:

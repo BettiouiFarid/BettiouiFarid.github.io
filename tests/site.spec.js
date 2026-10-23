@@ -17,7 +17,7 @@ for (const url of pages) {
   test(`${url} loads with no Framer badge and no broken assets`, async ({ page }) => {
     const failed = [];
     page.on("response", (r) => {
-      if (r.status() >= 400 && new URL(r.url()).host === "localhost:3000") failed.push(`${r.status()} ${r.url()}`);
+      if (r.status() >= 400 && new URL(r.url()).origin === new URL(page.url()).origin) failed.push(`${r.status()} ${r.url()}`);
     });
     const errors = [];
     page.on("pageerror", (e) => errors.push(e.message));
