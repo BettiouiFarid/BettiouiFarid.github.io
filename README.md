@@ -25,3 +25,8 @@ echo 'export PATH="$HOME/.local/node-v22.11.0-darwin-arm64/bin:$PATH"' >> ~/.zsh
 ## Deploy
 
 Upload the `site/` folder to any static host (Netlify, Vercel, Cloudflare Pages, GitHub Pages). Pages use clean URLs (`/projects` → `projects/index.html`), which those hosts handle automatically.
+
+## Customising
+
+- `tools/mirror.pl` — re-download the site from Framer (`perl tools/mirror.pl site`) after publishing changes there
+- `tools/customize.pl` — local edits applied on top of the mirror (`perl tools/customize.pl site`): footer year/location, and fluid layout above 1440px. Run it after every mirror.

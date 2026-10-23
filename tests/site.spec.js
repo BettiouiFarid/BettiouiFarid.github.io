@@ -51,6 +51,31 @@ test("home page shows the main content", async ({ page }) => {
   await page.screenshot({ path: "test-results/home.png" });
 });
 
+test("footer shows Doha and 2026", async ({ page }) => {
+  await page.goto("/", { waitUntil: "networkidle" });
+  await page.waitForTimeout(1500);
+  const text = await page.locator("#main").innerText();
+  expect(text).toContain("Doha, Qatar");
+  expect(text).toMatch(/© 2026/);
+  expect(text).not.toContain("Mostaganem");
+  expect(text).not.toMatch(/© 2024/);
+});
+
+test("layout fills wide screens", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "wide", "only on the 2560px project");
+  for (const url of ["/", "/projects", "/work/trigocity"]) {
+    await page.goto(url, { waitUntil: "networkidle" });
+    await page.waitForTimeout(1500);
+    // the design's 1208px container should grow to ~84% of the viewport
+    const stuck = await page.$$eval("#main *", (els) =>
+      els.filter((el) => Math.round(el.getBoundingClientRect().width) === 1208).length
+    );
+    expect(stuck, `${url} has fixed 1208px containers`).toBe(0);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
+    expect(overflow, `${url} scrolls horizontally`).toBeLessThanOrEqual(0);
+  }
+});
+
 test("project link navigates to a work page", async ({ page }) => {
   await page.goto("/", { waitUntil: "networkidle" });
   await page.locator('a[href="./work/trigocity"]').first().click();
