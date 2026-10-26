@@ -1,0 +1,13 @@
+rules_version = '2';
+
+// Visitors never talk to Storage directly: the site serves images through /media.
+// Only editors listed in Firestore /admins/{their email} can upload or manage files in the CMS.
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if request.auth != null
+        && request.auth.token.email_verified == true
+        && firestore.exists(/databases/(default)/documents/admins/$(request.auth.token.email));
+    }
+  }
+}

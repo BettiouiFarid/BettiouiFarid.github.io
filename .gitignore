@@ -1,0 +1,15 @@
+node_modules/
+.next/
+next-env.d.ts
+*.tsbuildinfo
+.DS_Store
+.env
+.env*.local
+test-results/
+playwright-report/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+.firebase/
+# built admin app (produced by npm run admin:build)
+public/admin/

@@ -1,0 +1,17 @@
+rules_version = '2';
+
+// The public website reads Firestore on its server (Admin SDK, which bypasses these rules),
+// so nothing here is public. Only editors listed in /admins/{their email} can use the CMS.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
+    }
+
+    match /{document=**} {
+      allow read, write: if isAdmin();
+    }
+  }
+}

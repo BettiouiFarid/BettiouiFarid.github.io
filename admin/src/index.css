@@ -1,0 +1,80 @@
+@import 'tailwindcss';
+@import '@firecms/ui/index.css' layer(base);
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+@plugin "@tailwindcss/typography";
+
+@source "../index.html";
+@source "./**/*.{js,ts,jsx,tsx}";
+@source "../node_modules/@firecms/**/*.{js,jsx}";
+
+:root {
+  /* Brand: crown yellow #efb817 and ink #111111. The primary is a darker gold so white button text stays readable. */
+  --color-primary: #9a7400;
+  --color-secondary: #111111;
+  --brand-yellow: #efb817;
+  --font-sans: 'Manrope', system-ui, sans-serif;
+}
+
+html,
+body,
+button,
+input,
+textarea,
+select {
+  font-family: 'Manrope', system-ui, sans-serif;
+}
+
+/* Native controls in the custom panels follow the brand instead of the browser blue. */
+input[type='range'],
+input[type='checkbox'],
+input[type='radio'] {
+  accent-color: var(--brand-yellow);
+}
+
+/* Cursor trail control panel */
+.trail-field {
+  display: grid;
+  grid-template-columns: 150px 1fr 70px;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 0;
+}
+.trail-pad {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #111111;
+  height: 240px;
+}
+@media (max-width: 640px) {
+  .trail-field {
+    grid-template-columns: 1fr 64px;
+    row-gap: 4px;
+  }
+  .trail-field > span:first-child {
+    grid-column: 1 / -1;
+  }
+  .trail-pad {
+    height: 150px;
+  }
+}
+
+body {
+  @apply w-full min-h-screen bg-surface-50 dark:bg-surface-900 flex flex-col items-center justify-center;
+}
+
+a {
+  @apply text-primary dark:text-primary;
+}
+
+/* Manrope renders lighter than Rubik at the same weight, so step the UI weights up one notch. */
+.font-medium {
+  font-weight: 600;
+}
+.font-semibold {
+  font-weight: 700;
+}
+.font-bold {
+  font-weight: 800;
+}
