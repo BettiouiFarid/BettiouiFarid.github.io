@@ -1,1 +1,6 @@
-{ "projects": { "default": "demo-portfolio" } }
+{
+  "projects": {
+    "default": "demo-portfolio",
+    "production": "faridbettioui-portfolio"
+  }
+}

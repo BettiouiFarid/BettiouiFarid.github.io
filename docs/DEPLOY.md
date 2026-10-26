@@ -12,7 +12,7 @@ Everything lives in **one Firebase project**:
 
 No database server, so there is no monthly fixed cost.
 
-Replace `PROJECT_ID` below with your Firebase project ID.
+The Firebase project ID is `faridbettioui-portfolio`. `.firebaserc` has two aliases: `default` is the local emulator project (`demo-portfolio`), `production` is the real one, so always pass `--project production` and local development keeps working.
 
 ---
 
@@ -25,10 +25,10 @@ Replace `PROJECT_ID` below with your Firebase project ID.
 3. **Build → Firestore Database → Create database**, *production mode*, location `eur3` (Europe) — or the region nearest your visitors.
 4. **Build → Storage → Get started**, same location.
 5. **Project settings → Your apps → Web (`</>`)** → register an app named "CMS". Copy its config values into
-   [`admin/.env.production`](admin/.env.production) (`apiKey`, `authDomain`, `projectId`, `storageBucket`, `appId`).
+   [`admin/.env.production`](../admin/.env.production) (`apiKey`, `authDomain`, `projectId`, `storageBucket`, `appId`).
    These are public by design — the rules below are what protect your data.
-6. Put the project ID into [`apphosting.yaml`](apphosting.yaml) (`FIREBASE_STORAGE_BUCKET`, the bucket name shown in *Storage*)
-   and into [`.firebaserc`](.firebaserc).
+6. The project ID is already in [`apphosting.yaml`](../apphosting.yaml) and [`.firebaserc`](../.firebaserc). Check that the bucket name shown
+   in *Storage* matches `FIREBASE_STORAGE_BUCKET` in `apphosting.yaml` (older projects use `faridbettioui-portfolio.appspot.com`).
 
 ## 2. Command-line tools (on this Mac)
 
@@ -36,13 +36,12 @@ Replace `PROJECT_ID` below with your Firebase project ID.
 export PATH="$HOME/.local/node-v24.22.1-darwin-arm64/bin:$PATH"
 npm install
 npx firebase login
-npx firebase use PROJECT_ID
 ```
 
 ## 3. Security rules
 
 ```bash
-npx firebase deploy --only firestore,storage
+npx firebase deploy --only firestore,storage --project production
 ```
 
 The rules make Firestore and Storage **private**: only editors listed in Firestore under `admins/<their email>` can read or
@@ -51,7 +50,7 @@ write. Visitors never touch them — the website reads on its server and serves 
 ## 4. App Hosting backend
 
 ```bash
-npx firebase apphosting:backends:create --backend portfolio --primary-region europe-west4
+npx firebase apphosting:backends:create --backend portfolio --primary-region europe-west4 --project production
 ```
 
 Connect the GitHub repo **BettiouiFarid/BettiouiFarid.github.io**, live branch **main**, root directory **/**.
@@ -60,9 +59,9 @@ Every push to `main` then builds (`npm run build` builds the admin app, then the
 Allow the backend's service account to use Firestore and Storage:
 
 ```bash
-SA=firebase-app-hosting-compute@PROJECT_ID.iam.gserviceaccount.com
-gcloud projects add-iam-policy-binding PROJECT_ID --member="serviceAccount:$SA" --role=roles/datastore.user
-gcloud projects add-iam-policy-binding PROJECT_ID --member="serviceAccount:$SA" --role=roles/storage.objectViewer
+SA=firebase-app-hosting-compute@faridbettioui-portfolio.iam.gserviceaccount.com
+gcloud projects add-iam-policy-binding faridbettioui-portfolio --member="serviceAccount:$SA" --role=roles/datastore.user
+gcloud projects add-iam-policy-binding faridbettioui-portfolio --member="serviceAccount:$SA" --role=roles/storage.objectViewer
 ```
 
 Push to `main` to trigger the first rollout (watch it under *App Hosting* in the console).
@@ -75,7 +74,7 @@ Google account to edit. Run once, from this folder:
 ```bash
 gcloud auth application-default login
 SEED_TARGET=production \
-GCLOUD_PROJECT=PROJECT_ID FIREBASE_STORAGE_BUCKET=PROJECT_ID.firebasestorage.app \
+GCLOUD_PROJECT=faridbettioui-portfolio FIREBASE_STORAGE_BUCKET=faridbettioui-portfolio.firebasestorage.app \
 ADMIN_EMAIL=you@gmail.com \
 npm run seed
 ```

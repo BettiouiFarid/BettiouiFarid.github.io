@@ -1,5 +1,5 @@
 # Firebase App Hosting (Cloud Run) settings for the production backend.
-# Replace REPLACE_PROJECT_ID with your Firebase project ID (see DEPLOY.md).
+# Project: faridbettioui-portfolio (see docs/DEPLOY.md).
 
 runConfig:
   # 0 = scales to zero when idle (cheapest, ~2–4 s first load after a quiet period).
@@ -17,5 +17,5 @@ env:
 
   # Bucket that holds the uploaded images (Firebase console → Storage).
   - variable: FIREBASE_STORAGE_BUCKET
-    value: REPLACE_PROJECT_ID.firebasestorage.app
+    value: faridbettioui-portfolio.firebasestorage.app
     availability: [RUNTIME]
