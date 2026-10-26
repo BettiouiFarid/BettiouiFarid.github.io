@@ -7,7 +7,7 @@ Portfolio site with a built-in CMS, rebuilt from the original Framer design. All
 - **Data** — Cloud Firestore (content) and Cloud Storage for Firebase (images); Firebase Auth (Google sign-in) for editors
 - **Hosting** — Firebase App Hosting; domain on Cloudflare
 
-Deployment: [DEPLOY.md](DEPLOY.md).
+Deployment: [docs/DEPLOY.md](docs/DEPLOY.md).
 
 ## Run locally
 
@@ -30,13 +30,16 @@ Local editor login: `admin@example.com` / `localpassword`. Emulator UI: <http://
 
 | In the CMS | Firestore | Drives |
 |---|---|---|
-| **Projects** | `projects/<id>` | `/projects` grid and `/work/<id>` pages. *Position* orders them; *Show on home page* features them. |
+| **Pages** | `pages/home`, `about`, `projects`, `stories`, `contact` | One entry per page, each with its own ID: its texts plus its own browser title, search description and share image. |
+| **Projects** | `projects/<id>` | `/projects` grid and `/work/<id>` pages. *Order* sorts them; *On home page* features them. |
 | **Stories** | `posts/<id>` | `/stories`, the home list and `/blog/<id>`. A `>` quote in the text becomes the large pull quote. |
-| **Site settings** | `site/settings` | Contact details, footer, and the texts of the Home, About, Projects and Stories pages. *Home → Floating photo frames* sets the hero's drifting frames: shape, seconds per picture, and 2–5 pictures each. |
+| **Hero animation** | `hero/settings` | The home hero: photo frames (portrait, landscape or square, 2–5 pictures each), tilt, speed and spacing. The *Preview* tab plays it. |
+| **Cursor trail** | `trail/settings` | The line that follows the mouse: thickness, duration, opacity, length, colour. The *Control panel* tab tries changes live. |
+| **Site settings** | `site/settings` | Contact details, social links and footer, shared by every page. |
 | — | `admins/<email>` | Who may use the CMS (enforced by the Firestore and Storage rules). |
 
 The document ID is the page's web address. Only items with **Status = Published** appear on the site.
-The cursor trail (`src/components/CursorTrail.tsx`) is a 3px line in `#efb818` that follows the mouse; it is off on touch screens and with reduced motion.
+The cursor trail is off on touch screens and with reduced motion.
 Images are stored under `media/` in Storage and served resized through `/img/media/<file>?w=1024`.
 
 ## Tests
@@ -49,11 +52,18 @@ BASE_URL=https://faridbettioui.art npm test # against the live site (admin tests
 ## Layout
 
 ```
-src/app/(frontend)/   site pages and styles
-src/app/img/          image proxy: reads Storage, resizes
+src/app/(frontend)/       site pages and styles
+src/app/img/              image proxy: reads Storage, resizes
 src/app/api/revalidate/   called by the CMS after each save
-src/lib/              Firestore/Storage access (cms.ts), types
-admin/                FireCMS app: collections in admin/src/collections
-seed/                 Framer content + images, and the import script
-firestore.rules, storage.rules, firebase.json   Firebase config
+src/components/           site building blocks (menu, footer, cursor trail…)
+src/lib/                  Firestore/Storage access (cms.ts), types
+admin/                    FireCMS app: collections in admin/src/collections
+seed/                     Framer content + images, and the import script
+tests/                    Playwright end-to-end tests (site and CMS)
+docs/                     deployment guide
+firestore.rules, storage.rules, firebase.json, apphosting.yaml   Firebase config
 ```
+
+## Checks
+
+`npm run lint`, `npm run typecheck` and the admin build run on every push (GitHub Actions, `.github/workflows/ci.yml`).
