@@ -17,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const site = await getSite()
   return {
     metadataBase: new URL(process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'),
-    title: { default: `${site.name} — ${site.copyright}`, template: `%s — ${site.name}` },
+    title: { default: [site.name, site.copyright].filter(Boolean).join(' — '), template: `%s — ${site.name}` },
     description: site.description,
     openGraph: {
       siteName: site.name,

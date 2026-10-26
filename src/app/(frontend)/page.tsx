@@ -15,7 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const [site, { home }] = await Promise.all([getSite(), getPages()])
   const meta = pageMetadata(undefined, home, site)
   // The home page sets the whole title (the other pages get " — name" added by the layout).
-  return { ...meta, title: { absolute: home.metaTitle || `${site.name} — ${site.copyright}` } }
+  return { ...meta, title: { absolute: home.metaTitle || [site.name, site.copyright].filter(Boolean).join(' — ') } }
 }
 
 export default async function Home() {
