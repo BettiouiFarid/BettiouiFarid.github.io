@@ -86,6 +86,6 @@ export type AboutPage = PageSeo &
 
 export type ListPage = PageSeo & PageHeader // Projects and Stories
 
-export type ContactPage = PageSeo & PageHeader & { note?: string } // email, location and links come from Site settings
+export type ContactPage = PageSeo & PageHeader & { note?: string; portfolioFile?: string | null } // email, location and links come from Site settings
 
 export type Pages = { home: HomePage; about: AboutPage; projects: ListPage; stories: ListPage; contact: ContactPage }

@@ -222,3 +222,9 @@ test('contact page shows the email, details and links from the CMS', async ({ pa
   await expect(details.getByRole('link', { name: 'Behance' })).toHaveAttribute('href', /behance\.net/)
   await expect(page).toHaveTitle(/Contact/)
 })
+
+test('contact page offers the portfolio PDF as a download only when one is set', async ({ page, request }) => {
+  await page.goto('/contact')
+  await expect(page.getByRole('link', { name: 'Portfolio' })).toHaveCount(0)
+  expect((await request.get('/download/portfolio')).status()).toBe(404)
+})

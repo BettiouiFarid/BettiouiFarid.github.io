@@ -37,7 +37,7 @@ export const pagesCollection: EntityCollection = buildCollection({
   propertiesOrder: [
     'metaTitle', 'metaDescription', 'shareImage',
     'role', 'headingLine1', 'headingLine2', 'paragraph',
-    'eyebrow', 'intro', 'note', 'bio', 'photos', 'stats', 'services',
+    'eyebrow', 'intro', 'note', 'portfolioFile', 'bio', 'photos', 'stats', 'services',
   ],
   properties: {
     // ---- On every page
@@ -68,6 +68,22 @@ export const pagesCollection: EntityCollection = buildCollection({
 
     // ---- Contact (email, location, website and social links are under Site settings)
     note: only('contact', buildProperty({ name: 'Note under the email', dataType: 'string', multiline: true, description: 'For example what you are open to, or how fast you reply.' })),
+
+    portfolioFile: only(
+      'contact',
+      buildProperty({
+        name: 'Portfolio file (PDF)',
+        dataType: 'string',
+        description: 'Visitors get it with the “Portfolio” button under the contact details. Leave empty to hide the button. Large PDFs are fine, but under 30 MB downloads fastest.',
+        storage: {
+          storagePath: 'files',
+          fileName: '{rand}_{file}',
+          acceptedFiles: ['application/pdf'],
+          storeUrl: false,
+          maxSize: 100 * 1024 * 1024,
+        },
+      }),
+    ),
 
     // ---- About
     bio: highlighted('about', 'Bio'),

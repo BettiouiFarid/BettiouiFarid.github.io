@@ -20,6 +20,14 @@ export default async function ContactPage() {
             {site.email}
           </a>
           {c.note && <p className="contact-note">{c.note}</p>}
+          {c.portfolioFile && (
+            <a className="contact-download" href="/download/portfolio" download>
+              Portfolio
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <path d="M7 1v8m0 0L3.5 5.5M7 9l3.5-3.5M2 12.5h10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </a>
+          )}
           <dl className="contact-details">
             {site.location && (
               <div>

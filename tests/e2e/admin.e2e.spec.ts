@@ -1,7 +1,8 @@
 import { expect, test } from '@playwright/test'
 import { initializeApp } from 'firebase-admin/app'
 import { getAuth } from 'firebase-admin/auth'
-import { getFirestore } from 'firebase-admin/firestore'
+import { FieldValue, getFirestore } from 'firebase-admin/firestore'
+import { getStorage } from 'firebase-admin/storage'
 
 import { idToken, loginToAdmin } from '../helpers'
 
@@ -11,7 +12,8 @@ test.describe.configure({ mode: 'serial' })
 
 process.env.FIRESTORE_EMULATOR_HOST = '127.0.0.1:8080'
 process.env.FIREBASE_AUTH_EMULATOR_HOST = '127.0.0.1:9099'
-const app = initializeApp({ projectId: 'demo-portfolio' }, 'tests')
+process.env.FIREBASE_STORAGE_EMULATOR_HOST = '127.0.0.1:9199'
+const app = initializeApp({ projectId: 'demo-portfolio', storageBucket: 'demo-portfolio.appspot.com' }, 'tests')
 const db = getFirestore(app)
 const auth = getAuth(app)
 
@@ -274,6 +276,30 @@ test('a frame can be square', async ({ page, request }) => {
     expect(loop).toBe(312 + 400 + 232 + 400 + 4 * 370)
   } finally {
     await db.doc('hero/settings').update({ frames: original })
+    await refresh()
+  }
+})
+
+test('the portfolio button downloads the PDF chosen in the CMS', async ({ page, request }) => {
+  const token = await idToken('admin@example.com', 'localpassword')
+  const refresh = () => request.post('/api/revalidate', { headers: { Authorization: `Bearer ${token}` } })
+  const pdf = Buffer.from('%PDF-1.4\n1 0 obj<<>>endobj\ntrailer<<>>\n%%EOF\n')
+  const file = getStorage(app).bucket('demo-portfolio.appspot.com').file('files/test_portfolio.pdf')
+  try {
+    await file.save(pdf, { contentType: 'application/pdf' })
+    await db.doc('pages/contact').update({ portfolioFile: 'files/test_portfolio.pdf' })
+    await refresh()
+    await page.goto('/contact', { waitUntil: 'networkidle' })
+    const button = page.getByRole('link', { name: 'Portfolio' })
+    await expect(button).toBeVisible()
+    const [download] = await Promise.all([page.waitForEvent('download'), button.click()])
+    expect(download.suggestedFilename()).toBe('Farid-Bettioui-Portfolio.pdf')
+    const res = await request.get('/download/portfolio')
+    expect(res.headers()['content-type']).toBe('application/pdf')
+    expect((await res.body()).toString()).toContain('%PDF-1.4')
+  } finally {
+    await db.doc('pages/contact').update({ portfolioFile: FieldValue.delete() })
+    await file.delete({ ignoreNotFound: true })
     await refresh()
   }
 })
