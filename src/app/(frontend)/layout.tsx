@@ -25,7 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
       images: site.shareImage ? [`/img/${site.shareImage}?w=1600`] : undefined,
     },
     twitter: { card: 'summary_large_image' },
-    icons: { icon: '/favicon.png' },
+    icons: { icon: [{ url: '/crown.svg', type: 'image/svg+xml' }, { url: '/favicon.png', type: 'image/png' }], apple: '/favicon.png' },
   }
 }
 
